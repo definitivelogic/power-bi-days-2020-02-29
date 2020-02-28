@@ -1,0 +1,122 @@
+﻿<html>
+  <head>
+<meta name="WebPartPageExpansion" content="full" />
+<head>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<style>
+		.row { margin-top:10px !important; }
+	</style>
+</head>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    <script>
+	  
+      $(document).ready(function(){      
+        
+        //Enable Parent Facility ID Dropdown on load 
+        $('#facility').prop("disabled", false);
+        
+      	//Set Default
+		$('.pBI').change(function(){
+			updateSrc();
+		});      	
+		
+		//Update Frame Src
+		function updateSrc()
+		{
+			var tempSrc = $('#pBI').val();
+			var queryStringStart = tempSrc.indexOf("?");
+			if(queryStringStart != -1)
+			{
+				//Get querystring parameters
+				var split = tempSrc.substring(queryStringStart+1).split('&');
+				
+				$('#pBIMParams').html('');
+				for(var i = 0; i < split.length; i++)
+				{
+					$('#pBIMParams').append('<li class="list-group-item">' + split[i].substring(0,split[i].indexOf('=')) + '</li>');					
+				}//end for
+
+				var extension = ""
+				if($('#pBIFPE').val() === 'False')
+				{
+					extension += "&filterPaneEnabled=false";
+				}
+				if($('#pBINCP').val() === 'False')
+				{
+					extension += "&navContentPaneEnabled=false";
+				}
+				if($('#pBIPN').val() !== '')
+				{
+					extension += "&pageName=" + $('#pBIPN').val();
+				}
+				if($('#pBIFilter').val() !== '')
+				{
+					extension += "&filter=" + $('#pBIFilter').val();
+				}
+				
+				if(extension.length === 0)
+				{
+					extension = " ";
+				}
+				$('#frame').attr('src',tempSrc + extension);
+				$('#note').html('<span style="background-color:yellow">' + extension + '</span>');
+			}			
+		}
+
+	 });
+    </script>
+  </head>
+  <body>
+	 <div class="container-fluid">
+	  <div class="row">
+		<div class="col-lg">
+			PBI Endpoint: <input id="pBI" class="pBI" type="text" size="150"/>
+			<br/>
+			<span id="note"></span>		
+		</div>
+	  </div>
+	  <hr/>
+	  <strong>Parameters Already Included</strong>
+		<ul id="pBIMParams" class="list-group list-group-horizontal">
+		</ul>
+	  <hr/>
+	  <strong>Options</strong>
+	  <div class="row">
+		<div class="col-6">
+			Page Name: 		
+			<input id="pBIPN" class="pBI" type="text" size="50"/>
+		</div>
+	  </div>
+ 	  <div class="row">
+		<div class="col-4">
+			Filter Pane Enabled: 		
+			<select id="pBIFPE" class="pBI">
+				<option>True</option>
+				<option>False</option>
+			</select>
+		</div>
+	  </div>
+	  <div class="row">
+		<div class="col-4">
+			Navigation Content Pane Enabled: 		
+			<select id="pBINCP" class="pBI">
+				<option>True</option>
+				<option>False</option>
+			</select>
+		</div>
+	  </div>
+	  <div class="row">
+		<div class="col-4">
+			Custom Filter: 		
+			<input id="pBIFilter" class="pBI" type="text" size="50"/>
+		</div>
+	  </div>
+	</div>
+    <div class="row">
+		<iframe id="frame" width="1400" height="500" src="" frameborder="0" allowFullScreen="true"></iframe>
+	</div>
+  </body>
+</html>
