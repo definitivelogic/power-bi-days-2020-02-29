@@ -14,10 +14,7 @@
     <script>
 	  
       $(document).ready(function(){      
-        
-        //Enable Parent Facility ID Dropdown on load 
-        $('#facility').prop("disabled", false);
-        
+                
       	//Set Default
 		$('.pBI').change(function(){
 			updateSrc();
@@ -26,32 +23,40 @@
 		//Update Frame Src
 		function updateSrc()
 		{
+			//Grab URL from input
 			var tempSrc = $('#pBI').val();
 			var queryStringStart = tempSrc.indexOf("?");
 			if(queryStringStart != -1)
 			{
 				//Get querystring parameters
 				var split = tempSrc.substring(queryStringStart+1).split('&');
-				
+
+				//Clear out parameters to display	
 				$('#pBIMParams').html('');
 				for(var i = 0; i < split.length; i++)
 				{
+					//Build horizontal list
 					$('#pBIMParams').append('<li class="list-group-item">' + split[i].substring(0,split[i].indexOf('=')) + '</li>');					
 				}//end for
 
+				//Check for additional settings
 				var extension = ""
+				//Show or Hide Filter Pane
 				if($('#pBIFPE').val() === 'False')
 				{
 					extension += "&filterPaneEnabled=false";
 				}
+				//Show or Hide bottom navigation
 				if($('#pBINCP').val() === 'False')
 				{
 					extension += "&navContentPaneEnabled=false";
 				}
+				//Set Tab Name
 				if($('#pBIPN').val() !== '')
 				{
 					extension += "&pageName=" + $('#pBIPN').val();
 				}
+				//Set additional filters
 				if($('#pBIFilter').val() !== '')
 				{
 					extension += "&filter=" + $('#pBIFilter').val();
@@ -61,6 +66,7 @@
 				{
 					extension = " ";
 				}
+				//Update frame and highlight additional settings
 				$('#frame').attr('src',tempSrc + extension);
 				$('#note').html('<span style="background-color:yellow">' + extension + '</span>');
 			}			
